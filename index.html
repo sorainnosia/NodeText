@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NodeText - Lightweight Code Editor for Windows & Android</title>
+    <meta name="description" content="NodeText is a fast, lightweight code editor with syntax highlighting, find & replace, word wrap, and file explorer. Available for Windows and Android.">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="container">
+            <a href="index.html" class="nav-logo">
+                <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect width="28" height="28" rx="6" fill="#89b4fa"/><path d="M7 8h14M7 14h10M7 20h12" stroke="#0b0b14" stroke-width="2.5" stroke-linecap="round"/></svg>Node<span>Text</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html" class="active">Home</a></li>
+                <li><a href="features.html">Features</a></li>
+                <li><a href="download.html">Download</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="container">
+            <h1>Code Faster with<br><span class="highlight">NodeText</span></h1>
+            <p>A lightweight, blazing-fast code editor with syntax highlighting for 20+ languages. Built with Rust for Windows and Android.</p>
+            <div class="hero-buttons">
+                <a href="download.html" class="btn btn-primary">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    Download Now
+                </a>
+                <a href="features.html" class="btn btn-secondary">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+                    Learn More
+                </a>
+            </div>
+
+            <!-- Editor Preview -->
+            <div class="editor-preview">
+                <div class="preview-titlebar">
+                    <div class="preview-dot red"></div>
+                    <div class="preview-dot yellow"></div>
+                    <div class="preview-dot green"></div>
+                    <span class="preview-title">main.rs - NodeText</span>
+                </div>
+                <div class="preview-body">
+                    <div class="preview-lines">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12</div>
+                    <div class="preview-code">
+<span class="kw">use</span> std<span class="op">::</span>fs<span class="pc">;</span><br>
+<span class="kw">use</span> std<span class="op">::</span>io<span class="op">::</span>Result<span class="pc">;</span><br>
+<br>
+<span class="cm">/// Read a file and return its contents</span><br>
+<span class="kw">fn</span> <span class="fn">read_file</span><span class="pc">(</span>path<span class="pc">:</span> <span class="op">&amp;</span><span class="ty">str</span><span class="pc">)</span> <span class="op">-&gt;</span> Result<span class="op">&lt;</span><span class="ty">String</span><span class="op">&gt;</span> <span class="pc">{</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">let</span> content <span class="op">=</span> fs<span class="op">::</span><span class="fn">read_to_string</span><span class="pc">(</span>path<span class="pc">)</span><span class="op">?</span><span class="pc">;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;println<span class="op">!</span><span class="pc">(</span><span class="str">"Loaded {} bytes"</span><span class="pc">,</span> content<span class="pc">.</span><span class="fn">len</span><span class="pc">())</span><span class="pc">;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;Ok<span class="pc">(</span>content<span class="pc">)</span><br>
+<span class="pc">}</span><br>
+<br>
+<span class="kw">fn</span> <span class="fn">main</span><span class="pc">()</span> <span class="pc">{</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">let</span> data <span class="op">=</span> <span class="fn">read_file</span><span class="pc">(</span><span class="str">"hello.txt"</span><span class="pc">)</span><span class="pc">;</span><br>
+<span class="pc">}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Overview -->
+    <section class="features" id="features">
+        <div class="container">
+            <div class="section-header">
+                <h2>Why NodeText?</h2>
+                <p>Everything you need in a code editor, nothing you don't.</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon blue">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                    </div>
+                    <h3>Lightning Fast</h3>
+                    <p>Built with Rust and optimized viewport rendering. Opens large files instantly with no lag, even on mobile.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon purple">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                    </div>
+                    <h3>Syntax Highlighting</h3>
+                    <p>Rich highlighting for 20+ languages including Rust, Python, JavaScript, C++, Go, Java, and more.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon green">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    </div>
+                    <h3>Find & Replace</h3>
+                    <p>Powerful search with match highlighting, replace all, and keyboard shortcuts for fast navigation.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon orange">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                    </div>
+                    <h3>Line Numbers</h3>
+                    <p>Clear line numbering with current line highlighting. Navigate your code with precision.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon pink">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+                    </div>
+                    <h3>File Explorer</h3>
+                    <p>Open folders and browse your project tree. Expand directories, click to open files seamlessly.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon yellow">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                    </div>
+                    <h3>Cross Platform</h3>
+                    <p>Native apps for Windows and Android. Same great experience on desktop and mobile.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Languages -->
+    <section class="languages">
+        <div class="container">
+            <div class="section-header">
+                <h2>20+ Languages Supported</h2>
+                <p>First-class syntax highlighting for the languages you use every day.</p>
+            </div>
+            <div class="lang-tags">
+                <span class="lang-tag">Rust</span>
+                <span class="lang-tag">Python</span>
+                <span class="lang-tag">JavaScript</span>
+                <span class="lang-tag">TypeScript</span>
+                <span class="lang-tag">C / C++</span>
+                <span class="lang-tag">C#</span>
+                <span class="lang-tag">Java</span>
+                <span class="lang-tag">Go</span>
+                <span class="lang-tag">HTML</span>
+                <span class="lang-tag">CSS</span>
+                <span class="lang-tag">JSON</span>
+                <span class="lang-tag">XML</span>
+                <span class="lang-tag">TOML</span>
+                <span class="lang-tag">Markdown</span>
+                <span class="lang-tag">Shell / Bash</span>
+                <span class="lang-tag">Batch</span>
+                <span class="lang-tag">CSV</span>
+                <span class="lang-tag">INI / Config</span>
+                <span class="lang-tag">Log Files</span>
+                <span class="lang-tag">Razor / CSHTML</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Platforms -->
+    <section class="platforms">
+        <div class="container">
+            <div class="section-header">
+                <h2>Available on Your Platform</h2>
+                <p>Native performance on desktop and mobile.</p>
+            </div>
+            <div class="platform-cards">
+                <div class="platform-card">
+                    <div class="icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="currentColor"><path d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.4H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-12.9-1.801"/></svg>
+                    </div>
+                    <h3>Windows</h3>
+                    <p>Native Windows app built with Tauri. Lightweight installer, minimal resource usage, instant startup.</p>
+                    <a href="download.html" class="btn btn-primary">Download for Windows</a>
+                </div>
+                <div class="platform-card">
+                    <div class="icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="currentColor"><path d="M17.523 2c-.477.01-.96.085-1.424.233-1.087.347-1.79.984-2.097 1.882a2.93 2.93 0 0 0 .007 1.882c.143.424.358.826.64 1.16-.355.36-.726.808-1.025 1.392-.59 1.15-.77 2.608-.135 4.483-1.24-.784-2.587-1.17-3.8-1.1-1.258.073-2.345.606-2.976 1.588-.63.98-.744 2.218-.265 3.544.47 1.303 1.528 2.7 3.255 3.96a.5.5 0 0 0 .575.012c1.486-.88 2.478-1.868 3.04-2.87.547-.977.685-1.96.502-2.836-.173-.83-.596-1.543-1.107-2.09.394-.373.87-.627 1.43-.723.7-.12 1.515.06 2.41.65a.5.5 0 0 0 .571-.007c1.363-.932 2.192-1.953 2.555-3.04.356-1.065.247-2.142-.265-3.044a.5.5 0 0 0-.036-.057c-.3-.41-.667-.715-1.065-.97.18-.485.26-.988.222-1.486-.065-.844-.437-1.652-1.162-2.2A3.028 3.028 0 0 0 17.523 2z"/></svg>
+                    </div>
+                    <h3>Android</h3>
+                    <p>Touch-optimized mobile editor with slide-in file explorer, native file picker, and adaptive toolbar.</p>
+                    <a href="download.html" class="btn btn-primary">Download for Android</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta">
+        <div class="container">
+            <h2>Ready to Code?</h2>
+            <p>Download NodeText today and experience a fast, clean editor that stays out of your way.</p>
+            <a href="download.html" class="btn btn-primary">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Get NodeText Free
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>NodeText &copy; 2025. Built with Rust and Tauri.</p>
+        </div>
+    </footer>
+</body>
+</html>
