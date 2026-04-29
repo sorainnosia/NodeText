@@ -5,7 +5,7 @@ A lightweight, blazing-fast code editor with built-in Rust debugging via LLDB. B
 **Website:** [https://nodetext.org](https://nodetext.org)
 
 ## Features
-[![NodeText - Rust Code Editor + Debugger](//img.youtube.com/vi/mQ_YOSCO8Ww/0.jpg)](//www.youtube.com/watch?v=mQ_YOSCO8Ww "NodeText - Rust Code Editor + Debugger")
+[![NodeText - Rust Code Editor + Debugger](https://img.youtube.com/vi/mQ_YOSCO8Ww/0.jpg)](https://www.youtube.com/watch?v=mQ_YOSCO8Ww "NodeText - Rust Code Editor + Debugger")
 
 ### Rust Debugging via LLDB
 - **Breakpoints** — Click the gutter to set breakpoints with conditional expressions and thread ID filtering
