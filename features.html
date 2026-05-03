@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Features - NodeText</title>
-    <meta name="description" content="Explore NodeText features: syntax highlighting, find & replace, word wrap, line numbers, file explorer, and more.">
+    <meta name="description" content="Explore NodeText features: built-in Rust debugging via LLDB, syntax highlighting, integrated terminal, find & replace, word wrap, line numbers, file explorer, and more.">
     <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -20,6 +20,7 @@
                 <li><a href="index.html">Home</a></li>
                 <li><a href="features.html" class="active">Features</a></li>
                 <li><a href="download.html">Download</a></li>
+                <li><a href="Documentation/index.html">Docs</a></li>
             </ul>
         </div>
     </nav>
@@ -28,12 +29,92 @@
     <section class="hero" style="padding-bottom: 60px;">
         <div class="container">
             <h1>Packed with <span class="highlight">Features</span></h1>
-            <p>NodeText gives you everything you need to read, write, and navigate code efficiently on any device.</p>
+            <p>NodeText gives you everything you need to write, debug, and navigate Rust code efficiently on any device.</p>
+        </div>
+    </section>
+
+    <!-- Rust Debugging -->
+    <section class="features">
+        <div class="container">
+            <div class="section-header">
+                <h2>Rust Debugging via LLDB</h2>
+                <p>A full-featured debugger built right into the editor. Debug Rust programs with LLDB — no external tools or configuration required.</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon orange">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                    </div>
+                    <h3>Breakpoints</h3>
+                    <p>Click the gutter to set breakpoints. Supports conditional breakpoints and thread ID filtering for precise control over where execution pauses.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon blue">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                    </div>
+                    <h3>Step Controls</h3>
+                    <p>Step In, Step Over, Step Out, Continue, and Pause. Navigate through your code line by line with full macro-aware stepping support.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon green">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                    </div>
+                    <h3>Watch & Locals</h3>
+                    <p>Inspect local variables and add watch expressions. See Rust types, String contents, Vec lengths, and nested struct fields in a dedicated panel.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon purple">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    </div>
+                    <h3>Auto LLVM Install</h3>
+                    <p>If LLDB is not found, NodeText automatically downloads and installs LLVM with a progress dialog. No manual setup needed.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon pink">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                    </div>
+                    <h3>MSVC PDB Support</h3>
+                    <p>Debug Rust programs compiled with the MSVC toolchain on Windows. Reads PDB debug info for accurate variable inspection and source mapping.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon yellow">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                    </div>
+                    <h3>Cross Platform</h3>
+                    <p>Debugging works on Windows. NodeText finds your system LLDB or downloads the right version for your platform.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Integrated Terminal -->
+    <section class="features" style="border-top: 1px solid var(--border);">
+        <div class="container">
+            <div class="section-header">
+                <h2>Integrated Terminal</h2>
+                <p>Run commands and build your project without leaving the editor.</p>
+            </div>
+            <div class="features-grid" style="grid-template-columns: repeat(2, 1fr);">
+                <div class="feature-card">
+                    <div class="feature-icon yellow">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+                    </div>
+                    <h3>Shell Access</h3>
+                    <p>Open a terminal panel with Ctrl+` to run cargo build, git commands, or any shell command. Output is displayed with ANSI color support.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon blue">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V10M18 20V4M6 20v-4"/></svg>
+                    </div>
+                    <h3>Resizable Panels</h3>
+                    <p>Drag panel borders to resize the explorer, watch panel, and terminal. Customize your layout to match your workflow.</p>
+                </div>
+            </div>
         </div>
     </section>
 
     <!-- Syntax Highlighting -->
-    <section class="features">
+    <section class="features" style="border-top: 1px solid var(--border);">
         <div class="container">
             <div class="section-header">
                 <h2>Syntax Highlighting</h2>

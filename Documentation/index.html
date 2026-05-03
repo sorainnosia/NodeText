@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NodeText Documentation</title>
+    <meta name="description" content="Complete documentation for NodeText code editor — keyboard shortcuts, themes, settings, navigation, debugging, and more.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg: #0b0b14;
+            --surface: #12121f;
+            --card: #181828;
+            --border: #2a2a40;
+            --text: #e0e0f0;
+            --text-dim: #8888a8;
+            --accent: #89b4fa;
+            --accent-hover: #a8ccff;
+            --green: #a6e3a1;
+            --purple: #cba6f7;
+            --orange: #fab387;
+            --pink: #f38ba8;
+            --yellow: #f9e2af;
+            --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            --mono: 'Cascadia Code', 'Fira Code', 'JetBrains Mono', 'Consolas', monospace;
+            --tree-line: #2a2a40;
+        }
+        html { scroll-behavior: smooth; }
+        body { background: var(--bg); color: var(--text); font-family: var(--font); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+        a { color: var(--accent); text-decoration: none; transition: color 0.2s; }
+        a:hover { color: var(--accent-hover); }
+
+        /* Navigation */
+        nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(11,11,20,0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
+        nav .container { display: flex; align-items: center; justify-content: space-between; padding: 0 24px; height: 60px; max-width: 1200px; margin: 0 auto; }
+        .nav-logo { display: flex; align-items: center; font-size: 20px; font-weight: 700; color: var(--text); }
+        .nav-logo svg { margin-right: 10px; }
+        .nav-logo span { color: var(--accent); }
+        .nav-links { display: flex; align-items: center; gap: 32px; list-style: none; }
+        .nav-links a { color: var(--text-dim); font-size: 14px; font-weight: 500; transition: color 0.2s; }
+        .nav-links a:hover { color: var(--text); }
+        .nav-links a.active { color: var(--accent); }
+
+        /* Layout */
+        .page-layout { display: flex; gap: 0; max-width: 1400px; margin: 0 auto; padding-top: 60px; min-height: 100vh; }
+        .sidebar { position: sticky; top: 60px; width: 280px; min-width: 280px; height: calc(100vh - 60px); overflow-y: auto; border-right: 1px solid var(--border); padding: 24px 0; background: var(--surface); }
+        .sidebar::-webkit-scrollbar { width: 6px; }
+        .sidebar::-webkit-scrollbar-track { background: transparent; }
+        .sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+        .main-content { flex: 1; min-width: 0; padding: 40px 48px 80px; max-width: 900px; }
+
+        /* Sidebar Tree */
+        .sidebar-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-dim); padding: 0 20px 16px; }
+        .tree { list-style: none; }
+        .tree li { position: relative; }
+        .tree > li > a, .tree > li > .tree-toggle { padding: 7px 20px; }
+        .tree a { display: block; padding: 5px 20px 5px 36px; font-size: 13px; color: var(--text-dim); transition: all 0.15s; border-left: 2px solid transparent; cursor: pointer; }
+        .tree a:hover { color: var(--text); background: rgba(137,180,250,0.05); }
+        .tree a.active { color: var(--accent); border-left-color: var(--accent); background: rgba(137,180,250,0.08); }
+        .tree-toggle { display: flex; align-items: center; gap: 6px; padding: 7px 20px; font-size: 13px; font-weight: 600; color: var(--text); cursor: pointer; user-select: none; border: none; background: none; width: 100%; text-align: left; font-family: inherit; }
+        .tree-toggle:hover { background: rgba(137,180,250,0.05); }
+        .tree-toggle svg { width: 14px; height: 14px; transition: transform 0.2s; flex-shrink: 0; }
+        .tree-toggle.collapsed svg { transform: rotate(-90deg); }
+        .tree .subtree { list-style: none; overflow: hidden; transition: max-height 0.25s ease; }
+        .tree .subtree.collapsed { max-height: 0 !important; }
+        .tree .subtree a { padding-left: 48px; font-size: 12.5px; }
+        .tree .subtree .subtree a { padding-left: 62px; }
+
+        /* Content Sections */
+        .doc-section { margin-bottom: 56px; scroll-margin-top: 80px; }
+        .doc-section h1 { font-size: 36px; font-weight: 800; margin-bottom: 12px; letter-spacing: -0.5px; }
+        .doc-section h1 .highlight { background: linear-gradient(135deg, var(--accent), var(--purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .doc-section h2 { font-size: 24px; font-weight: 700; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid var(--border); color: var(--text); }
+        .doc-section h3 { font-size: 17px; font-weight: 600; margin: 24px 0 10px; color: var(--accent); }
+        .doc-section p { font-size: 15px; color: var(--text-dim); margin-bottom: 14px; line-height: 1.7; }
+        .doc-section ul, .doc-section ol { margin: 0 0 16px 20px; }
+        .doc-section li { font-size: 14px; color: var(--text-dim); line-height: 1.8; }
+
+        /* Keyboard Shortcut Table */
+        .shortcut-table { width: 100%; border-collapse: collapse; margin: 16px 0 24px; }
+        .shortcut-table th { text-align: left; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--text-dim); padding: 10px 16px; border-bottom: 2px solid var(--border); }
+        .shortcut-table td { padding: 10px 16px; font-size: 14px; color: var(--text-dim); border-bottom: 1px solid rgba(42,42,64,0.5); }
+        .shortcut-table tr:hover td { background: rgba(137,180,250,0.03); }
+        .shortcut-table td:first-child { white-space: nowrap; }
+        kbd { display: inline-block; padding: 2px 8px; font-family: var(--mono); font-size: 12px; color: var(--text); background: var(--card); border: 1px solid var(--border); border-radius: 4px; box-shadow: 0 1px 0 var(--border); line-height: 1.6; }
+        kbd + kbd { margin-left: 2px; }
+        .chord { display: inline-flex; align-items: center; gap: 4px; }
+        .chord .then { font-size: 11px; color: var(--text-dim); }
+
+        /* Feature Cards */
+        .feature-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 16px 0 24px; }
+        .feature-item { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 20px; transition: border-color 0.2s; }
+        .feature-item:hover { border-color: rgba(137,180,250,0.3); }
+        .feature-item h4 { font-size: 14px; font-weight: 600; margin-bottom: 6px; color: var(--text); }
+        .feature-item p { font-size: 13px; margin-bottom: 0; }
+
+        /* Language Tags */
+        .lang-tags { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0 24px; }
+        .lang-tag { padding: 5px 14px; background: var(--card); border: 1px solid var(--border); border-radius: 6px; font-size: 13px; font-weight: 500; color: var(--text-dim); transition: all 0.2s; }
+        .lang-tag:hover { border-color: var(--accent); color: var(--accent); }
+
+        /* Color Swatches */
+        .theme-preview { display: flex; gap: 16px; margin: 16px 0 24px; }
+        .theme-card { flex: 1; background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 20px; }
+        .theme-card h4 { font-size: 14px; font-weight: 600; margin-bottom: 12px; }
+        .swatch-row { display: flex; gap: 8px; margin-bottom: 8px; align-items: center; }
+        .swatch { width: 24px; height: 24px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.1); flex-shrink: 0; }
+        .swatch-label { font-size: 12px; color: var(--text-dim); font-family: var(--mono); }
+
+        /* Info box */
+        .info-box { background: rgba(137,180,250,0.08); border: 1px solid rgba(137,180,250,0.2); border-radius: 8px; padding: 16px 20px; margin: 16px 0; }
+        .info-box p { color: var(--text); margin-bottom: 0; font-size: 14px; }
+        .info-box strong { color: var(--accent); }
+
+        /* Footer */
+        footer { padding: 40px 0; border-top: 1px solid var(--border); text-align: center; }
+        footer p { font-size: 14px; color: var(--text-dim); }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .sidebar { display: none; }
+            .main-content { padding: 32px 20px 60px; }
+            .feature-grid { grid-template-columns: 1fr; }
+            .theme-preview { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navigation -->
+<nav>
+    <div class="container">
+        <a href="../index.html" class="nav-logo">
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect width="28" height="28" rx="6" fill="#89b4fa"/><path d="M7 8h14M7 14h10M7 20h12" stroke="#0b0b14" stroke-width="2.5" stroke-linecap="round"/></svg>Node<span>Text</span>
+        </a>
+        <ul class="nav-links">
+            <li><a href="../index.html">Home</a></li>
+            <li><a href="../features.html">Features</a></li>
+            <li><a href="../download.html">Download</a></li>
+            <li><a href="index.html" class="active">Docs</a></li>
+        </ul>
+    </div>
+</nav>
+
+<div class="page-layout">
+
+<!-- Sidebar Tree Navigation -->
+<aside class="sidebar">
+    <div class="sidebar-title">Documentation</div>
+    <ul class="tree" id="doc-tree">
+        <li><a href="#getting-started">Getting Started</a></li>
+
+        <li>
+            <button class="tree-toggle" onclick="toggleTree(this)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6,9 12,15 18,9"/></svg>
+                Keyboard Shortcuts
+            </button>
+            <ul class="subtree">
+                <li><a href="#shortcuts-file">File Operations</a></li>
+                <li><a href="#shortcuts-editing">Editing</a></li>
+                <li><a href="#shortcuts-chord">Chord Shortcuts (Ctrl+K)</a></li>
+                <li><a href="#shortcuts-find">Find &amp; Replace</a></li>
+                <li><a href="#shortcuts-navigation">Navigation</a></li>
+                <li><a href="#shortcuts-debug">Debugging</a></li>
+                <li><a href="#shortcuts-terminal">Terminal</a></li>
+                <li><a href="#shortcuts-explorer">File Explorer</a></li>
+            </ul>
+        </li>
+
+        <li>
+            <button class="tree-toggle" onclick="toggleTree(this)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6,9 12,15 18,9"/></svg>
+                Custom Shortcuts
+            </button>
+            <ul class="subtree">
+                <li><a href="#custom-shortcuts-config">Configuring Shortcuts</a></li>
+                <li><a href="#custom-shortcuts-builtin">Reserved Shortcuts</a></li>
+            </ul>
+        </li>
+
+        <li>
+            <button class="tree-toggle" onclick="toggleTree(this)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6,9 12,15 18,9"/></svg>
+                Themes &amp; Appearance
+            </button>
+            <ul class="subtree">
+                <li><a href="#themes-dark">Dark Theme</a></li>
+                <li><a href="#themes-light">Light Theme</a></li>
+                <li><a href="#themes-font">Font &amp; Size</a></li>
+                <li><a href="#themes-wordwrap">Word Wrap</a></li>
+            </ul>
+        </li>
+
+        <li>
+            <button class="tree-toggle" onclick="toggleTree(this)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6,9 12,15 18,9"/></svg>
+                Editor Features
+            </button>
+            <ul class="subtree">
+                <li><a href="#editor-syntax">Syntax Highlighting</a></li>
+                <li><a href="#editor-autocomplete">Code Completion</a></li>
+                <li><a href="#editor-autoindent">Auto-Indent &amp; Brackets</a></li>
+                <li><a href="#editor-folding">Code Folding</a></li>
+                <li><a href="#editor-blockselect">Block Selection</a></li>
+                <li><a href="#editor-find">Find &amp; Replace</a></li>
+                <li><a href="#editor-findinproject">Find in Project</a></li>
+                <li><a href="#editor-format">Document Formatting</a></li>
+                <li><a href="#editor-commenting">Comment / Uncomment</a></li>
+            </ul>
+        </li>
+
+        <li>
+            <button class="tree-toggle" onclick="toggleTree(this)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6,9 12,15 18,9"/></svg>
+                Navigation
+            </button>
+            <ul class="subtree">
+                <li><a href="#nav-explorer">File Explorer</a></li>
+                <li><a href="#nav-tabs">File Tabs</a></li>
+                <li><a href="#nav-breadcrumb">Breadcrumbs</a></li>
+                <li><a href="#nav-goto">Go to Line / Definition</a></li>
+                <li><a href="#nav-errors">Error Navigation</a></li>
+            </ul>
+        </li>
+
+        <li>
+            <button class="tree-toggle" onclick="toggleTree(this)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6,9 12,15 18,9"/></svg>
+                Panels &amp; Windows
+            </button>
+            <ul class="subtree">
+                <li><a href="#panels-terminal">Terminal</a></li>
+                <li><a href="#panels-debug">Debug / Watch</a></li>
+                <li><a href="#panels-claude">Claude AI</a></li>
+                <li><a href="#panels-chart">Chart Visualization</a></li>
+                <li><a href="#panels-popout">Pop-out / Pin Windows</a></li>
+            </ul>
+        </li>
+
+        <li>
+            <button class="tree-toggle" onclick="toggleTree(this)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6,9 12,15 18,9"/></svg>
+                Debugging
+            </button>
+            <ul class="subtree">
+                <li><a href="#debug-breakpoints">Breakpoints</a></li>
+                <li><a href="#debug-stepping">Step Controls</a></li>
+                <li><a href="#debug-watch">Variables &amp; Watch</a></li>
+                <li><a href="#debug-build">Build &amp; Diagnostics</a></li>
+            </ul>
+        </li>
+
+        <li><a href="#settings">Settings</a></li>
+        <li><a href="#dragdrop">Drag &amp; Drop</a></li>
+        <li><a href="#statusbar">Status Bar</a></li>
+    </ul>
+</aside>
+
+<!-- Main Content -->
+<main class="main-content">
+
+<!-- Getting Started -->
+<section class="doc-section" id="getting-started">
+    <h1>NodeText <span class="highlight">Documentation</span></h1>
+    <p>NodeText is a fast, lightweight code editor built with Rust and Tauri. It features built-in debugging via GDB/LLDB, syntax highlighting for 30+ languages, an integrated terminal, file explorer, code completion, and much more.</p>
+
+    <div class="feature-grid">
+        <div class="feature-item">
+            <h4>Open a File</h4>
+            <p><kbd>Ctrl</kbd><kbd>O</kbd> to open a file, or drag &amp; drop a file onto the editor.</p>
+        </div>
+        <div class="feature-item">
+            <h4>Open a Folder</h4>
+            <p>Use File &rarr; Open Folder to open a project directory in the explorer.</p>
+        </div>
+        <div class="feature-item">
+            <h4>Built-in Terminal</h4>
+            <p><kbd>Ctrl</kbd><kbd>`</kbd> to toggle the integrated terminal panel.</p>
+        </div>
+        <div class="feature-item">
+            <h4>Start Debugging</h4>
+            <p>Press <kbd>F5</kbd> to build and start debugging your Rust project.</p>
+        </div>
+    </div>
+</section>
+
+<!-- Keyboard Shortcuts -->
+<section class="doc-section" id="shortcuts-file">
+    <h2>Keyboard Shortcuts &mdash; File Operations</h2>
+    <table class="shortcut-table">
+        <thead><tr><th>Shortcut</th><th>Action</th></tr></thead>
+        <tbody>
+            <tr><td><kbd>Ctrl</kbd><kbd>O</kbd></td><td>Open file</td></tr>
+            <tr><td><kbd>Ctrl</kbd><kbd>S</kbd></td><td>Save file</td></tr>
+            <tr><td><kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>S</kbd></td><td>Save file as (new name)</td></tr>
+            <tr><td><kbd>Ctrl</kbd><kbd>N</kbd></td><td>Create new file</td></tr>
+            <tr><td><kbd>Ctrl</kbd><kbd>W</kbd></td><td>Close current file tab</td></tr>
+        </tbody>
+    </table>
+</section>
+
+<section class="doc-section" id="shortcuts-editing">
+    <h2>Keyboard Shortcuts &mdash; Editing</h2>
+    <table class="shortcut-table">
+        <thead><tr><th>Shortcut</th><th>Action</th></tr></thead>
+        <tbody>
+            <tr><td><kbd>Ctrl</kbd><kbd>Z</kbd></td><td>Undo</td></tr>
+            <tr><td><kbd>Ctrl</kbd><kbd>Y</kbd></td><td>Redo</td></tr>
+            <tr><td><kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>Z</kbd></td><td>Redo (alternative)</td></tr>
+            <tr><td><kbd>Ctrl</kbd><kbd>A</kbd></td><td>Select all</td></tr>
+            <tr><td><kbd>Ctrl</kbd><kbd>C</kbd></td><td>Copy</td></tr>
+            <tr><td><kbd>Ctrl</kbd><kbd>X</kbd></td><td>Cut</td></tr>
+            <tr><td><kbd>Ctrl</kbd><kbd>V</kbd></td><td>Paste</td></tr>
+            <tr><td><kbd>Tab</kbd></td><td>Insert tab / Indent selected lines</td></tr>
+            <tr><td><kbd>Shift</kbd><kbd>Tab</kbd></td><td>Dedent selected lines</td></tr>
+            <tr><td><kbd>Home</kbd></td><td>Smart home (toggle: first non-whitespace / column 0)</td></tr>
+            <tr><td><kbd>Enter</kbd></td><td>New line with auto-indent</td></tr>
+            <tr><td><kbd>Alt</kbd><kbd>&uarr;</kbd></td><td>Move line up (or expand selection scope in Rust)</td></tr>
+            <tr><td><kbd>Alt</kbd><kbd>&darr;</kbd></td><td>Move line down (or shrink selection scope in Rust)</td></tr>
+            <tr><td><kbd>Alt</kbd><kbd>Z</kbd></td><td>Toggle word wrap</td></tr>
+            <tr><td><kbd>Ctrl</kbd> + Mouse Wheel</td><td>Increase / decrease font size</td></tr>
+            <tr><td><kbd>Alt</kbd><kbd>Shift</kbd> + Drag</td><td>Block (column) selection</td></tr>
+        </tbody>
+    </table>
+</section>
+
+<section class="doc-section" id="shortcuts-chord">
+    <h2>Keyboard Shortcuts &mdash; Chord Shortcuts (Ctrl+K)</h2>
+    <p>Chord shortcuts are two-step key sequences. Press <kbd>Ctrl</kbd><kbd>K</kbd> first, then press the second key within 1.5 seconds. These are built-in and cannot be overridden by custom shortcuts.</p>
+    <table class="shortcut-table">
+        <thead><tr><th>Shortcut</th><th>Action</th></tr></thead>
+        <tbody>
+            <tr><td><span class="chord"><kbd>Ctrl</kbd><kbd>K</kbd> <span class="then">then</span> <kbd>D</kbd></span></td><td>Format document (JSON, XML, HTML)</td></tr>
+            <tr><td><span class="chord"><kbd>Ctrl</kbd><kbd>K</kbd> <span class="then">then</span> <kbd>C</kbd></span></td><td>Comment selected lines</td></tr>
+            <tr><td><span class="chord"><kbd>Ctrl</kbd><kbd>K</kbd> <span class="then">then</span> <kbd>U</kbd></span></td><td>Uncomment selected lines</td></tr>
+        </tbody>
+    </table>
+    <div class="info-box">
+        <p><strong>Note:</strong> If no text is selected, comment/uncomment operates on the entire current line. For block-comment languages (CSS, HTML, XML), the selection is wrapped with the block delimiters instead of line prefixes.</p>
+    </div>
+</section>
+
+<section class="doc-section" id="shortcuts-find">
+    <h2>Keyboard Shortcuts &mdash; Find &amp; Replace</h2>
+    <table class="shortcut-table">
+        <thead><tr><th>Shortcut</th><th>Action</th></tr></thead>
+        <tbody>
+            <tr><td><kbd>Ctrl</kbd><kbd>F</kbd></td><td>Open find bar</td></tr>
+            <tr><td><kbd>Ctrl</kbd><kbd>H</kbd></td><td>Open find and replace</td></tr>
+            <tr><td><kbd>F3</kbd></td><td>Find next match</td></tr>
+            <tr><td><kbd>Shift</kbd><kbd>F3</kbd></td><td>Find previous match</td></tr>
+            <tr><td><kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>F</kbd></td><td>Find in project (all files)</td></tr>
+            <tr><td><kbd>Escape</kbd></td><td>Close find bar</td></tr>
+        </tbody>
+    </table>
+</section>
+
+<section class="doc-section" id="shortcuts-navigation">
+    <h2>Keyboard Shortcuts &mdash; Navigation</h2>
+    <table class="shortcut-table">
+        <thead><tr><th>Shortcut</th><th>Action</th></tr></thead>
+        <tbody>
+            <tr><td><kbd>Ctrl</kbd><kbd>G</kbd></td><td>Go to line</td></tr>
+            <tr><td><kbd>F12</kbd></td><td>Go to definition</td></tr>
+            <tr><td><kbd>Ctrl</kbd> + Click</td><td>Go to definition (mouse)</td></tr>
+            <tr><td><kbd>Ctrl</kbd><kbd>Tab</kbd></td><td>Switch to next file tab</td></tr>
+            <tr><td><kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>Tab</kbd></td><td>Switch to previous file tab</td></tr>
+            <tr><td><kbd>F8</kbd></td><td>Go to next error</td></tr>
+            <tr><td><kbd>Shift</kbd><kbd>F8</kbd></td><td>Go to previous error</td></tr>
+        </tbody>
+    </table>
+</section>
+
+<section class="doc-section" id="shortcuts-debug">
+    <h2>Keyboard Shortcuts &mdash; Debugging</h2>
+    <table class="shortcut-table">
+        <thead><tr><th>Shortcut</th><th>Action</th></tr></thead>
+        <tbody>
+            <tr><td><kbd>F5</kbd></td><td>Start / Continue debugging</td></tr>
+            <tr><td><kbd>Shift</kbd><kbd>F5</kbd></td><td>Stop debugging</td></tr>
+            <tr><td><kbd>F9</kbd></td><td>Toggle breakpoint on current line</td></tr>
+            <tr><td><kbd>F10</kbd></td><td>Step over</td></tr>
+            <tr><td><kbd>F11</kbd></td><td>Step into</td></tr>
+            <tr><td><kbd>Shift</kbd><kbd>F11</kbd></td><td>Step out</td></tr>
+            <tr><td><kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>B</kbd></td><td>Build project (cargo build)</td></tr>
+        </tbody>
+    </table>
+</section>
+
+<section class="doc-section" id="shortcuts-terminal">
+    <h2>Keyboard Shortcuts &mdash; Terminal</h2>
+    <table class="shortcut-table">
+        <thead><tr><th>Shortcut</th><th>Action</th></tr></thead>
+        <tbody>
+            <tr><td><kbd>Ctrl</kbd><kbd>`</kbd></td><td>Toggle terminal panel</td></tr>
+            <tr><td><kbd>Enter</kbd></td><td>Execute command</td></tr>
+            <tr><td><kbd>&uarr;</kbd></td><td>Previous command in history</td></tr>
+            <tr><td><kbd>&darr;</kbd></td><td>Next command in history</td></tr>
+            <tr><td><kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>C</kbd></td><td>Send interrupt (Ctrl+C)</td></tr>
+        </tbody>
+    </table>
+</section>
+
+<section class="doc-section" id="shortcuts-explorer">
+    <h2>Keyboard Shortcuts &mdash; File Explorer</h2>
+    <table class="shortcut-table">
+        <thead><tr><th>Shortcut</th><th>Action</th></tr></thead>
+        <tbody>
+            <tr><td><kbd>F2</kbd></td><td>Rename selected file or folder</td></tr>
+            <tr><td><kbd>Delete</kbd></td><td>Delete selected file or folder</td></tr>
+            <tr><td>Right-click</td><td>Context menu: New File, New Folder, Rename, Delete, Copy, Cut, Paste</td></tr>
+        </tbody>
+    </table>
+</section>
+
+<!-- Custom Shortcuts -->
+<section class="doc-section" id="custom-shortcuts-config">
+    <h2>Custom Shortcuts &mdash; Configuration</h2>
+    <p>You can add custom keyboard shortcuts that execute terminal commands. Open <strong>Settings</strong> and switch to the <strong>Shortcuts</strong> tab.</p>
+    <h3>Adding a Custom Shortcut</h3>
+    <ol>
+        <li>Click <strong>+ Add Shortcut</strong></li>
+        <li>Check the modifier keys you want: <kbd>Ctrl</kbd>, <kbd>Alt</kbd>, <kbd>Shift</kbd></li>
+        <li>Select a key from the dropdown (A&ndash;Z, 0&ndash;9, or F1&ndash;F12)</li>
+        <li>Enter the terminal command to execute (e.g., <code>cargo build -r</code>)</li>
+        <li>Click <strong>Save</strong></li>
+    </ol>
+    <p>When the shortcut is triggered, the terminal panel opens automatically and the command is executed.</p>
+</section>
+
+<section class="doc-section" id="custom-shortcuts-builtin">
+    <h2>Custom Shortcuts &mdash; Reserved Shortcuts</h2>
+    <p>The following shortcuts are reserved by the editor and cannot be overridden by custom shortcuts:</p>
+    <div class="lang-tags">
+        <span class="lang-tag">Ctrl+O</span>
+        <span class="lang-tag">Ctrl+S</span>
+        <span class="lang-tag">Ctrl+Shift+S</span>
+        <span class="lang-tag">Ctrl+N</span>
+        <span class="lang-tag">Ctrl+Z</span>
+        <span class="lang-tag">Ctrl+Y</span>
+        <span class="lang-tag">Ctrl+Shift+Z</span>
+        <span class="lang-tag">Ctrl+A</span>
+        <span class="lang-tag">Ctrl+C</span>
+        <span class="lang-tag">Ctrl+V</span>
+        <span class="lang-tag">Ctrl+X</span>
+        <span class="lang-tag">Ctrl+W</span>
+        <span class="lang-tag">Ctrl+F</span>
+        <span class="lang-tag">Ctrl+H</span>
+        <span class="lang-tag">Ctrl+G</span>
+        <span class="lang-tag">Ctrl+K</span>
+        <span class="lang-tag">Ctrl+`</span>
+        <span class="lang-tag">Ctrl+Tab</span>
+        <span class="lang-tag">Ctrl+Shift+Tab</span>
+        <span class="lang-tag">Ctrl+Shift+B</span>
+        <span class="lang-tag">Ctrl+Shift+F</span>
+        <span class="lang-tag">Alt+Z</span>
+        <span class="lang-tag">Alt+&uarr;</span>
+        <span class="lang-tag">Alt+&darr;</span>
+        <span class="lang-tag">F3</span>
+        <span class="lang-tag">F5</span>
+        <span class="lang-tag">F8</span>
+        <span class="lang-tag">F9</span>
+        <span class="lang-tag">F10</span>
+        <span class="lang-tag">F11</span>
+        <span class="lang-tag">F12</span>
+    </div>
+</section>
+
+<!-- Themes -->
+<section class="doc-section" id="themes-dark">
+    <h2>Themes &mdash; Dark Theme (Default)</h2>
+    <p>The default theme uses the <strong>Catppuccin Mocha</strong> color palette &mdash; a warm, low-contrast dark theme that is easy on the eyes.</p>
+    <div class="theme-preview">
+        <div class="theme-card">
+            <h4>UI Colors</h4>
+            <div class="swatch-row"><div class="swatch" style="background:#1e1e2e"></div><span class="swatch-label">#1e1e2e Background</span></div>
+            <div class="swatch-row"><div class="swatch" style="background:#181825"></div><span class="swatch-label">#181825 Surface</span></div>
+            <div class="swatch-row"><div class="swatch" style="background:#11111b"></div><span class="swatch-label">#11111b Toolbar</span></div>
+            <div class="swatch-row"><div class="swatch" style="background:#313244"></div><span class="swatch-label">#313244 Border</span></div>
+            <div class="swatch-row"><div class="swatch" style="background:#89b4fa"></div><span class="swatch-label">#89b4fa Accent</span></div>
+            <div class="swatch-row"><div class="swatch" style="background:#cdd6f4"></div><span class="swatch-label">#cdd6f4 Text</span></div>
+        </div>
+        <div class="theme-card">
+            <h4>Syntax Colors</h4>
+            <div class="swatch-row"><div class="swatch" style="background:#cba6f7"></div><span class="swatch-label">#cba6f7 Keywords</span></div>
+            <div class="swatch-row"><div class="swatch" style="background:#a6e3a1"></div><span class="swatch-label">#a6e3a1 Strings</span></div>
+            <div class="swatch-row"><div class="swatch" style="background:#fab387"></div><span class="swatch-label">#fab387 Numbers</span></div>
+            <div class="swatch-row"><div class="swatch" style="background:#89b4fa"></div><span class="swatch-label">#89b4fa Functions</span></div>
+            <div class="swatch-row"><div class="swatch" style="background:#f9e2af"></div><span class="swatch-label">#f9e2af Types</span></div>
+            <div class="swatch-row"><div class="swatch" style="background:#6c7086"></div><span class="swatch-label">#6c7086 Comments</span></div>
+        </div>
+    </div>
+</section>
+
+<section class="doc-section" id="themes-light">
+    <h2>Themes &mdash; Light Theme</h2>
+    <p>The light theme uses the <strong>Catppuccin Latte</strong> color palette &mdash; a clean, bright theme for daytime use.</p>
+    <div class="theme-preview">
+        <div class="theme-card">
+            <h4>UI Colors</h4>
+            <div class="swatch-row"><div class="swatch" style="background:#eff1f5"></div><span class="swatch-label">#eff1f5 Background</span></div>
+            <div class="swatch-row"><div class="swatch" style="background:#d6dae4"></div><span class="swatch-label">#d6dae4 Surface</span></div>
+            <div class="swatch-row"><div class="swatch" style="background:#c8ccd6"></div><span class="swatch-label">#c8ccd6 Toolbar</span></div>
+            <div class="swatch-row"><div class="swatch" style="background:#ccd0da"></div><span class="swatch-label">#ccd0da Border</span></div>
+            <div class="swatch-row"><div class="swatch" style="background:#1e66f5"></div><span class="swatch-label">#1e66f5 Accent</span></div>
+            <div class="swatch-row"><div class="swatch" style="background:#4c4f69"></div><span class="swatch-label">#4c4f69 Text</span></div>
+        </div>
+        <div class="theme-card">
+            <h4>Syntax Colors</h4>
+            <div class="swatch-row"><div class="swatch" style="background:#8839ef"></div><span class="swatch-label">#8839ef Keywords</span></div>
+            <div class="swatch-row"><div class="swatch" style="background:#40a02b"></div><span class="swatch-label">#40a02b Strings</span></div>
+            <div class="swatch-row"><div class="swatch" style="background:#fe640b"></div><span class="swatch-label">#fe640b Numbers</span></div>
+            <div class="swatch-row"><div class="swatch" style="background:#1e66f5"></div><span class="swatch-label">#1e66f5 Functions</span></div>
+            <div class="swatch-row"><div class="swatch" style="background:#df8e1d"></div><span class="swatch-label">#df8e1d Types</span></div>
+            <div class="swatch-row"><div class="swatch" style="background:#8c8fa1"></div><span class="swatch-label">#8c8fa1 Comments</span></div>
+        </div>
+    </div>
+    <p>Switch themes in <strong>Settings &rarr; Editor &rarr; Theme</strong> dropdown. The change applies immediately to the editor and all pop-out windows.</p>
+</section>
+
+<section class="doc-section" id="themes-font">
+    <h2>Font &amp; Size</h2>
+    <p>The editor uses the following monospace font stack (in priority order):</p>
+    <div class="lang-tags">
+        <span class="lang-tag">Cascadia Code</span>
+        <span class="lang-tag">Fira Code</span>
+        <span class="lang-tag">JetBrains Mono</span>
+        <span class="lang-tag">Consolas</span>
+        <span class="lang-tag">monospace</span>
+    </div>
+    <h3>Font Size</h3>
+    <ul>
+        <li><strong>Default:</strong> 13px</li>
+        <li><strong>Range:</strong> 10px &ndash; 24px</li>
+        <li>Adjust in <strong>Settings &rarr; Editor &rarr; Font Size</strong></li>
+        <li>Or use <kbd>Ctrl</kbd> + Mouse Wheel to adjust on-the-fly</li>
+    </ul>
+    <div class="info-box">
+        <p><strong>Note:</strong> Font ligatures are disabled for accurate character-width rendering and cursor positioning.</p>
+    </div>
+</section>
+
+<section class="doc-section" id="themes-wordwrap">
+    <h2>Word Wrap</h2>
+    <p>Toggle word wrap with <kbd>Alt</kbd><kbd>Z</kbd> or the wrap button in the toolbar. When enabled, long lines wrap at the editor boundary instead of scrolling horizontally. The setting persists across sessions.</p>
+</section>
+
+<!-- Editor Features -->
+<section class="doc-section" id="editor-syntax">
+    <h2>Syntax Highlighting</h2>
+    <p>NodeText supports syntax highlighting for 30+ languages, detected automatically from file extensions or content analysis.</p>
+    <div class="lang-tags">
+        <span class="lang-tag">Rust</span>
+        <span class="lang-tag">JavaScript</span>
+        <span class="lang-tag">TypeScript</span>
+        <span class="lang-tag">Python</span>
+        <span class="lang-tag">C</span>
+        <span class="lang-tag">C++</span>
+        <span class="lang-tag">C#</span>
+        <span class="lang-tag">Java</span>
+        <span class="lang-tag">Go</span>
+        <span class="lang-tag">HTML</span>
+        <span class="lang-tag">CSS</span>
+        <span class="lang-tag">JSON</span>
+        <span class="lang-tag">XML</span>
+        <span class="lang-tag">SQL</span>
+        <span class="lang-tag">Markdown</span>
+        <span class="lang-tag">TOML</span>
+        <span class="lang-tag">YAML</span>
+        <span class="lang-tag">Shell</span>
+        <span class="lang-tag">Batch</span>
+        <span class="lang-tag">PowerShell</span>
+        <span class="lang-tag">Ruby</span>
+        <span class="lang-tag">PHP</span>
+        <span class="lang-tag">Kotlin</span>
+        <span class="lang-tag">Swift</span>
+        <span class="lang-tag">Dart</span>
+        <span class="lang-tag">Lua</span>
+        <span class="lang-tag">R</span>
+        <span class="lang-tag">Perl</span>
+        <span class="lang-tag">Scala</span>
+        <span class="lang-tag">Zig</span>
+        <span class="lang-tag">Elixir</span>
+        <span class="lang-tag">Haskell</span>
+        <span class="lang-tag">GraphQL</span>
+        <span class="lang-tag">Protobuf</span>
+        <span class="lang-tag">Dockerfile</span>
+        <span class="lang-tag">Razor (cshtml)</span>
+        <span class="lang-tag">ASPX</span>
+        <span class="lang-tag">CSV</span>
+    </div>
+    <p>You can also manually select a language from the language dropdown in the toolbar or the status bar.</p>
+</section>
+
+<section class="doc-section" id="editor-autocomplete">
+    <h2>Code Completion</h2>
+    <p>The editor provides context-aware autocomplete suggestions including:</p>
+    <ul>
+        <li><strong>Language keywords</strong> &mdash; reserved words for the current language</li>
+        <li><strong>Built-in methods</strong> &mdash; Rust standard library (String, Vec, Option, Result, HashMap, etc.)</li>
+        <li><strong>Struct fields</strong> &mdash; triggered after <code>.</code> (dot)</li>
+        <li><strong>Module items</strong> &mdash; triggered after <code>::</code> (Rust)</li>
+        <li><strong>File &amp; project symbols</strong> &mdash; functions, types, and structs</li>
+        <li><strong>Buffer words</strong> &mdash; words from the current document</li>
+    </ul>
+    <p>Use <kbd>&uarr;</kbd>/<kbd>&darr;</kbd> to navigate, <kbd>Tab</kbd> or <kbd>Enter</kbd> to accept, <kbd>Escape</kbd> to dismiss.</p>
+</section>
+
+<section class="doc-section" id="editor-autoindent">
+    <h2>Auto-Indent &amp; Bracket Matching</h2>
+    <h3>Auto-Indent</h3>
+    <ul>
+        <li>Automatic indentation on <kbd>Enter</kbd> preserving the current indent level</li>
+        <li>Extra indent after opening brackets <code>{</code>, <code>(</code>, <code>[</code></li>
+        <li>Auto-dedent when typing closing brackets <code>}</code>, <code>)</code>, <code>]</code></li>
+        <li>Rust-specific: match arms (<code>=&gt;</code>), where clauses, method chains</li>
+    </ul>
+    <h3>Bracket Matching</h3>
+    <ul>
+        <li>Highlights matching pairs: <code>{}</code>, <code>[]</code>, <code>()</code></li>
+        <li>HTML/XML tag matching: <code>&lt;tag&gt;...&lt;/tag&gt;</code></li>
+        <li>Generic angle brackets: <code>Vec&lt;T&gt;</code>, <code>HashMap&lt;K,V&gt;</code></li>
+        <li>Skips matches inside strings and comments</li>
+    </ul>
+    <h3>Auto-Close</h3>
+    <p>When you select text and type an opening bracket or quote, the selection is automatically wrapped: <code>(selection)</code>, <code>[selection]</code>, <code>{selection}</code>, <code>"selection"</code>, <code>'selection'</code>.</p>
+</section>
+
+<section class="doc-section" id="editor-folding">
+    <h2>Code Folding</h2>
+    <p>Click the fold markers in the gutter to collapse or expand code regions. Rust files use AST-based folding; other languages use brace-matching. Collapsed regions show <code>/* ... */</code> as a placeholder. Editing inside a folded region automatically unfolds it.</p>
+</section>
+
+<section class="doc-section" id="editor-blockselect">
+    <h2>Block (Column) Selection</h2>
+    <p>Hold <kbd>Alt</kbd><kbd>Shift</kbd> and drag with the mouse to select a rectangular block of text. You can copy (<kbd>Ctrl</kbd><kbd>C</kbd>) or delete (<kbd>Delete</kbd> / <kbd>Backspace</kbd>) the block selection. Press <kbd>Escape</kbd> to clear.</p>
+</section>
+
+<section class="doc-section" id="editor-find">
+    <h2>Find &amp; Replace</h2>
+    <p>Press <kbd>Ctrl</kbd><kbd>F</kbd> to open the find bar. All matches are highlighted in orange, with the current match in yellow. Press <kbd>Ctrl</kbd><kbd>H</kbd> to open the replace row. Use the <strong>Replace</strong> button for single replacements or <strong>All</strong> to replace every match.</p>
+</section>
+
+<section class="doc-section" id="editor-findinproject">
+    <h2>Find in Project</h2>
+    <p>Press <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>F</kbd> to search across all files in the open project folder. Results are listed with file path, line number, and matched content. Click any result to navigate directly to that location.</p>
+</section>
+
+<section class="doc-section" id="editor-format">
+    <h2>Document Formatting</h2>
+    <p>Press <span class="chord"><kbd>Ctrl</kbd><kbd>K</kbd> <span class="then">then</span> <kbd>D</kbd></span> to format the current document.</p>
+    <ul>
+        <li><strong>JSON</strong> &mdash; Pretty-prints with 2-space indentation. Shows an error message if the JSON is invalid.</li>
+        <li><strong>XML / HTML</strong> &mdash; Formats with proper indentation, handling self-closing tags, comments, CDATA, and processing instructions.</li>
+    </ul>
+    <p>All formatting operations support undo (<kbd>Ctrl</kbd><kbd>Z</kbd>).</p>
+</section>
+
+<section class="doc-section" id="editor-commenting">
+    <h2>Comment / Uncomment</h2>
+    <p>Press <span class="chord"><kbd>Ctrl</kbd><kbd>K</kbd> <span class="then">then</span> <kbd>C</kbd></span> to comment and <span class="chord"><kbd>Ctrl</kbd><kbd>K</kbd> <span class="then">then</span> <kbd>U</kbd></span> to uncomment selected code.</p>
+    <h3>Comment Styles by Language</h3>
+    <table class="shortcut-table">
+        <thead><tr><th>Style</th><th>Languages</th></tr></thead>
+        <tbody>
+            <tr><td><code>// </code></td><td>Rust, JavaScript, TypeScript, C, C++, C#, Java, Go, Dart, Kotlin, Swift, Scala, Zig, PHP, Protobuf, GraphQL</td></tr>
+            <tr><td><code># </code></td><td>Python, Shell, Ruby, R, Perl, Elixir, TOML, Config, Dockerfile, PowerShell</td></tr>
+            <tr><td><code>-- </code></td><td>SQL, Lua, Haskell</td></tr>
+            <tr><td><code>REM </code></td><td>Batch</td></tr>
+            <tr><td><code>&lt;!-- --&gt;</code></td><td>HTML, XML</td></tr>
+            <tr><td><code>/* */</code></td><td>CSS</td></tr>
+        </tbody>
+    </table>
+</section>
+
+<!-- Navigation -->
+<section class="doc-section" id="nav-explorer">
+    <h2>File Explorer</h2>
+    <p>The file explorer panel shows the folder tree of the currently opened project. Features include:</p>
+    <ul>
+        <li>Expand/collapse folders with chevron icons</li>
+        <li>Active file highlighting</li>
+        <li>Filter bar to search for files and symbols (press <kbd>Escape</kbd> to clear)</li>
+        <li>Right-click context menu: New File, New Folder, Rename, Delete, Copy, Cut, Paste</li>
+        <li>File icons colored by language type</li>
+        <li>Outline section showing code symbols (functions, structs, etc.) for the current file</li>
+    </ul>
+</section>
+
+<section class="doc-section" id="nav-tabs">
+    <h2>File Tabs</h2>
+    <p>Each open file gets a tab at the top of the editor. Tabs show the filename, a modified indicator (*) for unsaved changes, and a close button. Switch tabs with <kbd>Ctrl</kbd><kbd>Tab</kbd> / <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>Tab</kbd> or click directly. Close the current tab with <kbd>Ctrl</kbd><kbd>W</kbd>. Drag tabs to reorder them.</p>
+</section>
+
+<section class="doc-section" id="nav-breadcrumb">
+    <h2>Breadcrumb Navigation</h2>
+    <p>The breadcrumb bar below the tabs shows the current scope hierarchy (e.g., <code>impl MyStruct &rarr; fn my_method</code>). Click any segment to jump to that scope in the file. It updates automatically as you navigate.</p>
+</section>
+
+<section class="doc-section" id="nav-goto">
+    <h2>Go to Line / Go to Definition</h2>
+    <h3>Go to Line</h3>
+    <p>Press <kbd>Ctrl</kbd><kbd>G</kbd> to open the Go to Line dialog. Type a line number and press <kbd>Enter</kbd> to jump.</p>
+    <h3>Go to Definition</h3>
+    <p>Press <kbd>F12</kbd> or <kbd>Ctrl</kbd>+Click on a symbol to jump to its definition. If multiple matches are found, they appear in the search results panel. Searches local project files including path-based crate dependencies defined in Cargo.toml.</p>
+</section>
+
+<section class="doc-section" id="nav-errors">
+    <h2>Error Navigation</h2>
+    <p>Cargo check errors appear as red underlines in the editor. Hover to see the error message. Cycle through errors with <kbd>F8</kbd> (next) and <kbd>Shift</kbd><kbd>F8</kbd> (previous). The editor automatically scrolls to the error location.</p>
+</section>
+
+<!-- Panels -->
+<section class="doc-section" id="panels-terminal">
+    <h2>Integrated Terminal</h2>
+    <p>Toggle with <kbd>Ctrl</kbd><kbd>`</kbd>. The terminal supports:</p>
+    <ul>
+        <li>Command execution with output display</li>
+        <li>Command history navigation (<kbd>&uarr;</kbd>/<kbd>&darr;</kbd>)</li>
+        <li>Interrupt running commands (<kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>C</kbd>)</li>
+        <li>Syntax-colored cargo check output</li>
+        <li>Auto-opens for builds, debug sessions, and custom shortcuts</li>
+    </ul>
+</section>
+
+<section class="doc-section" id="panels-debug">
+    <h2>Debug / Watch Panel</h2>
+    <p>The watch panel shows local variables and custom watch expressions during debug sessions. Features:</p>
+    <ul>
+        <li><strong>Locals</strong> &mdash; automatically populated with local variable values</li>
+        <li><strong>Watch</strong> &mdash; add custom expressions to monitor</li>
+        <li>Recursive structure expansion</li>
+        <li>Type information on hover</li>
+        <li>Context menu: Add to watch, Copy value, Inspect</li>
+        <li>Watch expressions persist in <code>debug.json</code></li>
+    </ul>
+</section>
+
+<section class="doc-section" id="panels-claude">
+    <h2>Claude AI Panel</h2>
+    <p>An integrated AI assistant powered by Claude. Enter your Anthropic API key in the panel settings to enable it. Ask questions about your code, get explanations, or request help directly within the editor.</p>
+    <ul>
+        <li>Chat-style message interface</li>
+        <li><kbd>Enter</kbd> to send, <kbd>Shift</kbd><kbd>Enter</kbd> for new line</li>
+        <li>Conversation history maintained during session</li>
+    </ul>
+</section>
+
+<section class="doc-section" id="panels-chart">
+    <h2>Chart Visualization</h2>
+    <p>Visualize Rust code structure as interactive graphs. Chart types include:</p>
+    <ul>
+        <li><strong>Structure</strong> &mdash; module and type hierarchy</li>
+        <li><strong>Call Graph</strong> &mdash; function call relationships</li>
+        <li><strong>Dependencies</strong> &mdash; module dependencies</li>
+        <li><strong>Module Map</strong> &mdash; project module layout</li>
+        <li><strong>Type Hierarchy</strong> &mdash; trait/struct inheritance</li>
+        <li><strong>Complexity</strong> &mdash; code complexity heatmap</li>
+    </ul>
+    <p>Nodes are color-coded by kind. Double-click a node to navigate to its definition. Pan and zoom to explore large codebases.</p>
+</section>
+
+<section class="doc-section" id="panels-popout">
+    <h2>Pop-out / Pin Windows</h2>
+    <p>Several panels can be detached into separate windows using the pop-out button (arrow icon) in the panel header:</p>
+    <ul>
+        <li><strong>File Explorer</strong> &mdash; browse project files in a separate window</li>
+        <li><strong>Debug / Watch</strong> &mdash; monitor variables side-by-side with code</li>
+        <li><strong>Search Results</strong> &mdash; keep search results visible while editing</li>
+        <li><strong>Terminal</strong> &mdash; detach the terminal for multi-monitor setups</li>
+        <li><strong>Chart</strong> &mdash; visualize code in a dedicated window</li>
+    </ul>
+    <p>Pop-out windows automatically sync the current theme and font size. Each window operates independently and can be closed or pinned back to the main editor.</p>
+</section>
+
+<!-- Debugging -->
+<section class="doc-section" id="debug-breakpoints">
+    <h2>Breakpoints</h2>
+    <p>Click on a line number to toggle a breakpoint (red circle). Right-click a breakpoint to add a condition expression. Breakpoints are saved across sessions.</p>
+    <h3>Conditional Breakpoints</h3>
+    <p>Set an expression (e.g., <code>x &gt; 0</code>, <code>name == "foo"</code>) to pause execution only when the condition is true. Optionally filter by thread ID.</p>
+</section>
+
+<section class="doc-section" id="debug-stepping">
+    <h2>Step Controls</h2>
+    <table class="shortcut-table">
+        <thead><tr><th>Control</th><th>Description</th></tr></thead>
+        <tbody>
+            <tr><td><kbd>F5</kbd> Continue</td><td>Resume execution until the next breakpoint</td></tr>
+            <tr><td><kbd>F10</kbd> Step Over</td><td>Execute the current line, skip into function calls</td></tr>
+            <tr><td><kbd>F11</kbd> Step Into</td><td>Step into the function call on the current line</td></tr>
+            <tr><td><kbd>Shift</kbd><kbd>F11</kbd> Step Out</td><td>Continue until the current function returns</td></tr>
+            <tr><td><kbd>Shift</kbd><kbd>F5</kbd> Stop</td><td>Terminate the debug session</td></tr>
+        </tbody>
+    </table>
+    <p>The debugger supports both GDB and LLDB, auto-detecting which is available. Rust macro expansions are automatically handled during stepping.</p>
+</section>
+
+<section class="doc-section" id="debug-watch">
+    <h2>Variables &amp; Watch</h2>
+    <p>During debugging, the Watch panel displays:</p>
+    <ul>
+        <li><strong>Local variables</strong> with their current values and types</li>
+        <li><strong>Watch expressions</strong> that you add manually</li>
+        <li>Expand complex types (structs, enums, vectors) to inspect nested fields</li>
+        <li>Smart type display: simplifies <code>alloc::string::String</code> to <code>String</code></li>
+        <li>Automatic unwrapping of Box, Rc, and Arc smart pointers</li>
+    </ul>
+</section>
+
+<section class="doc-section" id="debug-build">
+    <h2>Build &amp; Diagnostics</h2>
+    <p>Press <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>B</kbd> to run <code>cargo build -r</code>. Errors and warnings appear as underlines in the editor. The terminal shows full build output with colored diagnostics.</p>
+</section>
+
+<!-- Settings -->
+<section class="doc-section" id="settings">
+    <h2>Settings</h2>
+    <p>Open Settings from the toolbar gear icon. The settings dialog has two tabs:</p>
+    <h3>Editor Tab</h3>
+    <ul>
+        <li><strong>Theme</strong> &mdash; Choose between Dark and Light</li>
+        <li><strong>Font Size</strong> &mdash; Set between 10px and 24px</li>
+    </ul>
+    <h3>Shortcuts Tab</h3>
+    <ul>
+        <li>Add, edit, and remove custom keyboard shortcuts</li>
+        <li>Each shortcut maps a key combination to a terminal command</li>
+        <li>Built-in shortcuts are protected and will show an error if a conflict is detected</li>
+    </ul>
+    <p>Settings are saved automatically and persist across sessions.</p>
+</section>
+
+<!-- Drag & Drop -->
+<section class="doc-section" id="dragdrop">
+    <h2>Drag &amp; Drop</h2>
+    <p>Drag a file from your system file manager and drop it onto the editor to open it. A visual overlay with a dashed border and "Drop file to open" message appears during the drag. File tabs can also be reordered by dragging them.</p>
+</section>
+
+<!-- Status Bar -->
+<section class="doc-section" id="statusbar">
+    <h2>Status Bar</h2>
+    <p>The status bar at the bottom of the window shows:</p>
+    <ul>
+        <li><strong>Cursor position</strong> &mdash; <code>Ln 1, Col 1</code></li>
+        <li><strong>Language</strong> &mdash; current file language (e.g., Rust, JavaScript)</li>
+        <li><strong>Encoding</strong> &mdash; UTF-8</li>
+        <li><strong>Status messages</strong> &mdash; save confirmations, errors, build status</li>
+        <li><strong>Debug status</strong> &mdash; shown when a debug session is active</li>
+    </ul>
+</section>
+
+</main>
+</div>
+
+<footer>
+    <p>&copy; 2025 NodeText &mdash; Built with Rust &amp; Tauri</p>
+</footer>
+
+<script>
+    // Tree toggle
+    function toggleTree(btn) {
+        btn.classList.toggle('collapsed');
+        const subtree = btn.nextElementSibling;
+        if (subtree) subtree.classList.toggle('collapsed');
+    }
+
+    // Active link tracking on scroll
+    const sections = document.querySelectorAll('.doc-section');
+    const links = document.querySelectorAll('.tree a[href^="#"]');
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                links.forEach(link => link.classList.remove('active'));
+                const active = document.querySelector('.tree a[href="#' + entry.target.id + '"]');
+                if (active) {
+                    active.classList.add('active');
+                    // Expand parent subtree if collapsed
+                    const subtree = active.closest('.subtree');
+                    if (subtree && subtree.classList.contains('collapsed')) {
+                        subtree.classList.remove('collapsed');
+                        const toggle = subtree.previousElementSibling;
+                        if (toggle) toggle.classList.remove('collapsed');
+                    }
+                }
+            }
+        });
+    }, { rootMargin: '-80px 0px -60% 0px', threshold: 0 });
+    sections.forEach(s => observer.observe(s));
+
+    // Smooth scroll for sidebar links
+    links.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const target = document.querySelector(link.getAttribute('href'));
+            if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+    });
+
+    // Set initial subtree heights for animation
+    document.querySelectorAll('.subtree').forEach(st => {
+        st.style.maxHeight = st.scrollHeight + 'px';
+    });
+</script>
+
+</body>
+</html>
