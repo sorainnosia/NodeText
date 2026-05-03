@@ -1,3 +1,7 @@
+
+
+https://github.com/user-attachments/assets/87494ce1-ab30-4019-9a79-6f4e5f6a586f
+
 # NodeText
 
 A lightweight, blazing-fast code editor with built-in Rust debugging via GDB/LLDB. Built with Rust and Tauri for Windows and Android.
@@ -5,6 +9,7 @@ A lightweight, blazing-fast code editor with built-in Rust debugging via GDB/LLD
 **Website:** [https://nodetext.org](https://nodetext.org) | **Documentation:** [https://nodetext.org/Documentation](https://nodetext.org/Documentation)
 
 ## Features
+https://github.com/user-attachments/assets/9f1a487d-b59f-42f0-845b-f6ef17cd6d9d
 
 ### Syntax Highlighting
 - **30+ languages** — Rust, JavaScript, TypeScript, Python, C, C++, C#, Java, Go, HTML, CSS, JSON, XML, SQL, Markdown, TOML, YAML, Shell/Bash, Batch, PowerShell, Ruby, PHP, Kotlin, Swift, Dart, Lua, R, Perl, Scala, Zig, Elixir, Haskell, GraphQL, Protobuf, Dockerfile, Razor/CSHTML, ASPX, CSV
