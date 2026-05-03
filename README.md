@@ -1,7 +1,3 @@
-
-
-https://github.com/user-attachments/assets/87494ce1-ab30-4019-9a79-6f4e5f6a586f
-
 # NodeText
 
 A lightweight, blazing-fast code editor with built-in Rust debugging via GDB/LLDB. Built with Rust and Tauri for Windows and Android.
